@@ -9,7 +9,7 @@ This tool enables the easy conversion of JSON logfile outputs to html for intera
 inside a browser.
 
 A typical output is shown below:
-![image](./sample_output.png)
+![video](./operation.gif)
 
 ## Howto use
 
