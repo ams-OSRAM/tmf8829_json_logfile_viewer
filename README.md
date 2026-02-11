@@ -32,13 +32,15 @@ and open the created html file *tmf8829_log_1770799073._viewer.html* with a brow
 
 Log into your GitHub account, open repository on GitHub [tmf8829_json_logfile_viewer](https://github.com/ams-OSRAM/tmf8829_json_logfile_viewer) and create Codespace using **Code->Create Codespace on main**.
 
+![image](create_codespace.png)
+
 Copy the JSON logfile into the explorer view of the Codespace and execute the command for conversion in the terminal:
 
 ```bash
 ./json_to_html.py -i tmf8829_log_1770799073.json.gz 
 ```
 
-Download the created html file and view it with the browser.
+Download the created html file (right mouse click on file in Codespace explorer) and view it with the browser.
 
 #### Binder 
 
