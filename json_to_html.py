@@ -1,4 +1,16 @@
 #!/usr/bin/env python3
+
+# *****************************************************************************
+# * Copyright by ams OSRAM AG                                                 *
+# * All rights are reserved.                                                  *
+# *                                                                           *
+# *FOR FULL LICENSE TEXT SEE LICENSES.TXT                                     *
+# *****************************************************************************
+
+'''
+Generate HTML visualization from TMF8829 JSON log
+'''
+
 import json
 import argparse
 import os
