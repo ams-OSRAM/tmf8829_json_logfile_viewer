@@ -35,25 +35,24 @@ def writeFrameData(data:dict) -> None:
             histogram_counter = 0
             pixel = 0
 
-            row_key = []
-            row_key.append("#PIXEL")
+            header_key = []
+            header_key.append("#PIXEL")
 
             # generate row with keys
-            for pixelkey in frame["results"][0][0].keys():
-                if pixelkey == 'noise':
-                    row_key.append("noise")
-                if pixelkey == 'xtalk':
-                    row_key.append("xtalk")
-                if pixelkey == 'peaks':
-                    for i, pixelpeak in enumerate(frame["results"][0][0]['peaks']):
-                        for pixelpeakkey in pixelpeak:
-                            if pixelpeakkey == 'distance':
-                                row_key.append(f"distance{i}")
-                            if pixelpeakkey == 'snr':
-                                row_key.append(f"snr{i}")
-                            if pixelpeakkey == 'signal':
-                                row_key.append(f"signal{i}")
-            csvout.writerow(row_key)
+            row_keys = frame["results"][0][0].keys()
+            if 'noise' in row_keys:
+                header_key.append("noise")
+            if  'xtalk' in row_keys:
+                header_key.append("xtalk")
+            if 'peaks' in row_keys:
+                for i, peak in enumerate(frame["results"][0][0]['peaks']):
+                    if 'distance' in peak:
+                        header_key.append(f"distance{i}")
+                    if  'snr' in peak:
+                        header_key.append(f"snr{i}")
+                    if  'signal' in peak:
+                        header_key.append(f"signal{i}")
+            csvout.writerow(header_key)
             
             # log the results
 
@@ -77,11 +76,11 @@ def writeFrameData(data:dict) -> None:
                     pixel += 1
 
         if "mp_histo" in frame:
-            row_key = []
-            row_key.append("#RAWBIN")
+            header_key = []
+            header_key.append("#RAWBIN")
             for i in range(64):
-                row_key.append(i)
-            csvout.writerow(row_key)
+                header_key.append(i)
+            csvout.writerow(header_key)
 
             for mp_data in frame["mp_histo"]:
                 for histogram in mp_data:
