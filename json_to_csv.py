@@ -52,6 +52,12 @@ def writeFrameData(data:dict) -> None:
                         header_key.append(f"snr{i}")
                     if  'signal' in peak:
                         header_key.append(f"signal{i}")
+                    if  'x' in peak:
+                        header_key.append(f"x{i}")
+                    if  'y' in peak:
+                        header_key.append(f"y{i}")
+                    if  'z' in peak:
+                        header_key.append(f"z{i}")                        
             csvout.writerow(header_key)
             
             # log the results
@@ -72,6 +78,12 @@ def writeFrameData(data:dict) -> None:
                                 row_val.append(peak["snr"])
                             if 'signal' in peak:
                                 row_val.append(peak["signal"])
+                            if 'x' in peak:
+                                row_val.append(peak["x"])
+                            if 'y' in peak:
+                                row_val.append(peak["y"])
+                            if 'z' in peak:
+                                row_val.append(peak["z"])                                
                     csvout.writerow(row_val)
                     pixel += 1
 
