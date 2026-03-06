@@ -1,16 +1,4 @@
 #!/usr/bin/env python3
-
-# *****************************************************************************
-# * Copyright by ams OSRAM AG                                                 *
-# * All rights are reserved.                                                  *
-# *                                                                           *
-# *FOR FULL LICENSE TEXT SEE LICENSES.TXT                                     *
-# *****************************************************************************
-
-'''
-Generate HTML visualization from TMF8829 JSON log
-'''
-
 import json
 import argparse
 import os
@@ -502,6 +490,8 @@ def generate_html(json_file, output_file=None):
                         <select id="histoTypeSelect" style="margin-left: 8px;" disabled>
                             <option value="mp">MP</option>
                             <option value="ref">Ref</option>
+                            <option value="mp_ha">MP_HA</option>
+                            <option value="ref_ha">Ref_HA</option>
                         </select>
                     </label>
                 </div>
@@ -559,6 +549,8 @@ def generate_html(json_file, output_file=None):
                         <select id="histoTypeSelect2" style="margin-left: 8px;" disabled>
                             <option value="mp">MP</option>
                             <option value="ref">Ref</option>
+                            <option value="mp_ha">MP_HA</option>
+                            <option value="ref_ha">Ref_HA</option>
                         </select>
                     </label>
                 </div>
@@ -617,6 +609,31 @@ def generate_html(json_file, output_file=None):
                     // ref_histo[row] is a dict with 'bin' key
                     for (let i = 0; i < frame.ref_histo.length; i++) {{
                         const item = frame.ref_histo[i];
+                        if (item && item.bin && Array.isArray(item.bin) && item.bin.length > 0) {{
+                            hasHistogram = true;
+                            break;
+                        }}
+                    }}
+                }}
+
+                // Check mp_histo_HA if not found yet
+                if (!hasHistogram && frame.mp_histo_HA && frame.mp_histo_HA.length > 0) {{
+                    for (let i = 0; i < frame.mp_histo_HA.length; i++) {{
+                        const row = frame.mp_histo_HA[i];
+                        if (Array.isArray(row) && row.length > 0) {{
+                            const item = row[0];
+                            if (item && item.bin && Array.isArray(item.bin) && item.bin.length > 0) {{
+                                hasHistogram = true;
+                                break;
+                            }}
+                        }}
+                    }}
+                }}
+
+                // Check ref_histo_HA if not found yet
+                if (!hasHistogram && frame.ref_histo_HA && frame.ref_histo_HA.length > 0) {{
+                    for (let i = 0; i < frame.ref_histo_HA.length; i++) {{
+                        const item = frame.ref_histo_HA[i];
                         if (item && item.bin && Array.isArray(item.bin) && item.bin.length > 0) {{
                             hasHistogram = true;
                             break;
@@ -1153,12 +1170,16 @@ def generate_html(json_file, output_file=None):
 
             const histoType = displayOptions.histoType;
 
-            // Set grid layout to match resolution
-            histoGrid.style.gridTemplateColumns = `repeat(${{cols}}, 1fr)`;
+            // For ref and ref_ha types, only show column 0 to avoid duplicates
+            const isRefType = (histoType === 'ref' || histoType === 'ref_ha');
+            const displayCols = isRefType ? 1 : cols;
+
+            // Set grid layout to match resolution (or 1 column for ref types)
+            histoGrid.style.gridTemplateColumns = `repeat(${{displayCols}}, 1fr)`;
 
             // Create cells for each position (row, col)
             for (let row = 0; row < rows; row++) {{
-                for (let col = 0; col < cols; col++) {{
+                for (let col = 0; col < displayCols; col++) {{
                     const cell = document.createElement('div');
                     cell.className = 'histo-cell';
 
@@ -1190,6 +1211,24 @@ def generate_html(json_file, output_file=None):
                                 binData = histoData.bin;
                             }}
                             color = '#2196F3';
+                        }}
+                    }} else if (histoType === 'mp_ha') {{
+                        // Get histogram from mp_histo_HA[row][col]
+                        if (frame.mp_histo_HA && frame.mp_histo_HA[row] && frame.mp_histo_HA[row][col]) {{
+                            const histoData = frame.mp_histo_HA[row][col];
+                            if (histoData && histoData.bin && Array.isArray(histoData.bin)) {{
+                                binData = histoData.bin;
+                            }}
+                            color = '#FF9800';
+                        }}
+                    }} else if (histoType === 'ref_ha') {{
+                        // Get histogram from ref_histo_HA[row] (one per row, not per column)
+                        if (frame.ref_histo_HA && frame.ref_histo_HA[row]) {{
+                            const histoData = frame.ref_histo_HA[row];
+                            if (histoData && histoData.bin && Array.isArray(histoData.bin)) {{
+                                binData = histoData.bin;
+                            }}
+                            color = '#9C27B0';
                         }}
                     }}
 
