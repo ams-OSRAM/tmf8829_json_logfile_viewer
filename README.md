@@ -6,10 +6,11 @@ This tool enables the easy conversion of JSON logfile outputs to html for intera
 * Noise, crosstalk (xtalk), SNR and signal amplitude of each pixel
 * Histogram data for the pixels (MP) and reference (Ref)
 
-inside a browser.
+inside a browser. A web version for direct visualization without conversion is available as well with
+[tmf8829_json_viewer.html](https://ams-osram.github.io/tmf8829/ams_osram_tmf8829_json_viewer.html)
 
 A typical output is shown below:
-![video](./media/operation.gif)
+![Operation Demo](./media/operation.gif)
 
 ## Additional tools
 
